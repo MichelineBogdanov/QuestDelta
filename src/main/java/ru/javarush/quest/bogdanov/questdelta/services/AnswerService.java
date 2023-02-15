@@ -5,25 +5,26 @@ import ru.javarush.quest.bogdanov.questdelta.repositories.AnswerRepository;
 
 import java.util.List;
 
-public enum AnswerService {
+public class AnswerService {
 
-    ANSWER_SERVICE;
+    private final AnswerRepository answerRepository;
 
-    private final AnswerRepository answerRepository = AnswerRepository.getInstance();
+    public AnswerService(AnswerRepository answerRepository) {
+        this.answerRepository = answerRepository;
+    }
 
     public List<Answer> getAll() {
         return answerRepository.getAll();
     }
 
-    public Answer getAnswer(long id) {
+    public Answer getAnswer(Long id) {
         return answerRepository.getByID(id);
     }
 
-    public List<Answer> getAnswersByQuestionId(long id) {
-        return answerRepository.findAnswersByQuestionId(id);
+    public List<Answer> getAnswersByQuestionId(Long id) {
+        return answerRepository.getAnswersByQuestionId(id);
     }
 
     public void create(Answer answer) {
-        answerRepository.create(answer);
     }
 }

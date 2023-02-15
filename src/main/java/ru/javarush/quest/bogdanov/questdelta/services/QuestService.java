@@ -1,33 +1,33 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
 import ru.javarush.quest.bogdanov.questdelta.entities.Quest;
-import ru.javarush.quest.bogdanov.questdelta.entities.User;
 import ru.javarush.quest.bogdanov.questdelta.repositories.QuestRepository;
+import ru.javarush.quest.bogdanov.questdelta.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public enum QuestService {
+public class QuestService {
 
-    QUEST_SERVICE;
+    private final QuestRepository questRepository;
+    private final UserRepository userRepository;
 
-    private final QuestRepository questRepository = QuestRepository.getInstance();
-    private final UserService userService = UserService.USER_SERVICE;
+    public QuestService(QuestRepository questRepository, UserRepository userRepository) {
+        this.questRepository = questRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<Quest> getAll() {
         return questRepository.getAll();
     }
 
-    public Quest getQuestById(long id) {
+    public Quest getQuestById(Long id) {
         return questRepository.getByID(id);
     }
 
     public void create(Quest quest) {
-        questRepository.create(quest);
     }
 
-    public String getAuthorLogin(long authorId) {
-        Optional<User> user = userService.getUser(authorId);
-        return user.map(User::getLogin).orElse("Unknown person");
+    public String getAuthorLogin(Long authorId) {
+        return null;
     }
 }

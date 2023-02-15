@@ -36,7 +36,7 @@ public class RoleSelector implements Filter {
         Object rawUser = request.getSession().getAttribute("user");
         Role role = Objects.isNull(rawUser)
                 ? Role.GUEST
-                : ((User) rawUser).role;
+                : ((User) rawUser).getRole();
         if (uriMap.get(role).contains(command)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {

@@ -1,63 +1,77 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
-import ru.javarush.quest.bogdanov.questdelta.entities.Game;
+import org.hibernate.Transaction;
 import ru.javarush.quest.bogdanov.questdelta.entities.Role;
 import ru.javarush.quest.bogdanov.questdelta.entities.User;
 import ru.javarush.quest.bogdanov.questdelta.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public enum UserService {
-    USER_SERVICE;
+public class UserService {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAll() {
         return userRepository.getAll();
     }
 
-    public Optional<User> getUser(long id) {
-        return Optional.ofNullable(userRepository.getByID(id));
+    public User getUser(Long id) {
+        return userRepository.getByID(id);
     }
 
     public boolean create(String login, String password, Role role) {
-        if (find(login, password).isPresent()) {
-            return false;
-        } else {
-            User user = new User(login, password, role);
+        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        try {
+            User user = new User();
+            user.setLogin(login);
+            user.setPassword(password);
+            user.setRole(role);
             userRepository.create(user);
+            transaction.commit();
             return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
         }
     }
 
-    public boolean update(long id, String login, String password, Role role) {
-        if (getUser(id).isPresent()) {
-            User user = getUser(id).get();
+    public boolean update(Long id, String login, String password, Role role) {
+        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        try {
+            User user = new User();
+            user.setId(id);
             user.setLogin(login);
             user.setPassword(password);
             user.setRole(role);
             userRepository.update(user);
+            transaction.commit();
             return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
         }
-        return false;
     }
 
     public boolean delete(Long id) {
-        if (getUser(id).isPresent()) {
-            User user = getUser(id).get();
-            userRepository.delete(user.id);
+        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        try {
+            userRepository.delete(id);
+            transaction.commit();
             return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
         }
-        return false;
     }
 
-    public Optional<User> find(String login, String password) {
-        User user = new User(login, password);
+    public User find(String login, String password) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
         return userRepository.find(user);
-    }
-
-    public void addGame(Game game, long id) {
-        userRepository.addGame(game, id);
     }
 }

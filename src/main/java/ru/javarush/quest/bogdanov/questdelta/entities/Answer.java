@@ -1,44 +1,53 @@
 package ru.javarush.quest.bogdanov.questdelta.entities;
 
-import java.util.concurrent.atomic.AtomicLong;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
+@Entity
+@Table(name = "answer", schema = "data_storage")
 public class Answer {
 
-    private static final AtomicLong ID_ANSWER_COUNTER = new AtomicLong(1);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "answer_id")
+    private Long id;
 
-    public long id;
+    @ManyToOne
+    @JoinColumn(name = "question")
+    private Question question;
 
-    public long questionId;
+    @Column(name = "correct", columnDefinition = "BIT")
+    @Type(type = "org.hibernate.type.BooleanType")
+    private Boolean correct;
 
-    public boolean correct;
+    @Column(name = "text")
+    private String text;
 
-    public String text;
-
-    public Answer(long questionId, boolean correct, String text) {
-        this.id = ID_ANSWER_COUNTER.getAndIncrement();
-        this.questionId = questionId;
-        this.correct = correct;
-        this.text = text;
+    public Answer() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getQuestionId() {
-        return questionId;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionId(long questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
-    public boolean isCorrect() {
+    public Boolean getCorrect() {
         return correct;
+    }
+
+    public void setCorrect(Boolean correct) {
+        this.correct = correct;
     }
 
     public String getText() {
@@ -47,5 +56,14 @@ public class Answer {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", correct=" + correct +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

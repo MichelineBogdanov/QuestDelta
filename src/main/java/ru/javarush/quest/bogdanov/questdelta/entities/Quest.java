@@ -1,35 +1,40 @@
 package ru.javarush.quest.bogdanov.questdelta.entities;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "quest", schema = "data_storage")
 public class Quest {
 
-    private static final AtomicLong ID_QUEST_COUNTER = new AtomicLong(1);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "quest_id")
+    private Long id;
 
-    public long id;
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Question> questionList = new ArrayList<>();
 
-    public List<Question> questionList;
+    @Column(name = "name")
+    private String name;
 
-    public String name;
+    @Column(name = "description")
+    private String description;
 
-    public String description;
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User author;
 
-    public long authorId;
-
-    public Quest(List<Question> questionList, String name, String description, long authorId) {
-        this.id = ID_QUEST_COUNTER.getAndIncrement();
-        this.questionList = questionList;
-        this.name = name;
-        this.description = description;
-        this.authorId = authorId;
+    public Quest() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -57,20 +62,20 @@ public class Quest {
         this.description = description;
     }
 
-    public long getAuthorId() {
-        return authorId;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     @Override
     public String toString() {
-        return "Quest " + id +
-                ": name='" + name + '\'' +
+        return "Quest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", authorId=" + authorId +
                 '}';
     }
 }

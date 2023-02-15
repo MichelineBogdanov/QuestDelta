@@ -1,37 +1,44 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
+import ru.javarush.quest.bogdanov.questdelta.entities.Answer;
 import ru.javarush.quest.bogdanov.questdelta.entities.Question;
+import ru.javarush.quest.bogdanov.questdelta.repositories.AnswerRepository;
 import ru.javarush.quest.bogdanov.questdelta.repositories.QuestionRepository;
 
 import java.util.List;
 
-public enum QuestionService {
-    QUESTION_SERVICE;
+public class QuestionService {
 
-    private final QuestionRepository questionRepository = QuestionRepository.getInstance();
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
-    public Question getQuestionById(long id) {
-        return questionRepository.getByID(id);
+    public QuestionService(QuestionRepository questionRepository, AnswerRepository answerRepository) {
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
+    }
+
+    public Question getQuestionById(Long id) {
+        return null;
     }
 
     public List<Question> getAll() {
-        return questionRepository.getAll();
+        return null;
     }
 
-    public List<Question> getQuestionsByQuestId(long id) {
-        return questionRepository.findQuestionsByQuestId(id);
+    public List<Question> getQuestionsByQuestId(Long id) {
+        return questionRepository.getQuestionsByQuestId(id);
     }
 
     public void create(Question question) {
-        questionRepository.create(question);
     }
 
-    public Question getNextQuestionByAnswer(long questionId, long answerId) {
-        return questionRepository.findQuestionByAnswer(questionId, answerId);
+    public Question getNextQuestionByAnswer(Long questionId, Long answerId) {
+        Answer answer = answerRepository.getByID(answerId);
+        return questionRepository.getNextQuestionByAnswer(questionId, answer.getCorrect());
     }
 
-    public long firstQuestionId(long id) {
-        return questionRepository.getFirstQuestionId(id);
+    public Question firstQuestionId(Long questId) {
+        return getQuestionsByQuestId(questId).get(0);
     }
 
 }

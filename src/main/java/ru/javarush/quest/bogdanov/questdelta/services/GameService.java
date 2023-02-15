@@ -1,26 +1,41 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
+import org.hibernate.Transaction;
 import ru.javarush.quest.bogdanov.questdelta.entities.Game;
 import ru.javarush.quest.bogdanov.questdelta.repositories.GameRepository;
 
 import java.util.List;
 
-public enum GameService {
+public class GameService {
 
-    GAME_SERVICE;
+    private final GameRepository gameRepository;
 
-    private final GameRepository gameRepository = GameRepository.getInstance();
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
 
     public List<Game> getAll() {
         return gameRepository.getAll();
     }
 
     public void create(Game game) {
-        gameRepository.create(game);
+        Transaction transaction = gameRepository.getSessionCreator().getSession().beginTransaction();
+        try {
+            gameRepository.create(game);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 
     public void update(Game game) {
-        gameRepository.update(game);
+        Transaction transaction = gameRepository.getSessionCreator().getSession().beginTransaction();
+        try {
+            gameRepository.update(game);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 
 }

@@ -1,44 +1,45 @@
 package ru.javarush.quest.bogdanov.questdelta.entities;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "question", schema = "data_storage")
 public class Question {
 
-    private static final AtomicLong ID_QUESTION_COUNTER = new AtomicLong(1);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "question_id")
+    private Long id;
 
-    public long id;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answerList = new ArrayList<>();
 
-    public List<Answer> answerList;
+    @ManyToOne
+    @JoinColumn(name = "quest")
+    private Quest quest;
 
-    public long questId;
+    @ManyToOne
+    @JoinColumn(name = "correct_question")
+    private Question correctQuestion;
 
-    public long correctQuestionId;
+    @ManyToOne
+    @JoinColumn(name = "incorrect_question")
+    private Question incorrectQuestion;
 
-    public long incorrectQuestionId;
+    @Column(name = "text")
+    private String text;
 
-    public String text;
-
-    public Question(List<Answer> answerList, long questId, long correctQuestionId, long incorrectQuestionId, String text) {
-        this.id = ID_QUESTION_COUNTER.getAndIncrement();
-        this.answerList = answerList;
-        this.questId = questId;
-        this.correctQuestionId = correctQuestionId;
-        this.incorrectQuestionId = incorrectQuestionId;
-        this.text = text;
+    public Question() {
     }
 
-    public Question(long questId, String text) {
-        this.id = ID_QUESTION_COUNTER.getAndIncrement();
-        this.questId = questId;
-        this.text = text;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,16 +47,32 @@ public class Question {
         return answerList;
     }
 
-    public long getQuestId() {
-        return questId;
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = answerList;
     }
 
-    public long getCorrectQuestionId() {
-        return correctQuestionId;
+    public Quest getQuest() {
+        return quest;
     }
 
-    public long getIncorrectQuestionId() {
-        return incorrectQuestionId;
+    public void setQuest(Quest quest) {
+        this.quest = quest;
+    }
+
+    public Question getCorrectQuestion() {
+        return correctQuestion;
+    }
+
+    public void setCorrectQuestion(Question correctQuestion) {
+        this.correctQuestion = correctQuestion;
+    }
+
+    public Question getIncorrectQuestion() {
+        return incorrectQuestion;
+    }
+
+    public void setIncorrectQuestion(Question incorrectQuestion) {
+        this.incorrectQuestion = incorrectQuestion;
     }
 
     public String getText() {
@@ -70,8 +87,6 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "id=" + id +
-                ", correctQuestionId=" + correctQuestionId +
-                ", incorrectQuestionId=" + incorrectQuestionId +
                 ", text='" + text + '\'' +
                 '}';
     }

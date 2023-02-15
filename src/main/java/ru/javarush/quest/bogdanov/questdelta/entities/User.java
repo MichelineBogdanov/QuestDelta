@@ -1,49 +1,56 @@
 package ru.javarush.quest.bogdanov.questdelta.entities;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+
+@Entity
+@Table(name = "user", schema = "data_storage")
 public class User {
 
-    private static final AtomicLong ID_USER_COUNTER = new AtomicLong(1);
-    public long id;
-    public Role role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
 
-    public List<Quest> quests;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Quest> quests = new ArrayList<>();
 
-    public List<Game> games;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Game> games = new ArrayList<>();
 
-    public User(String login, String password, Role role) {
-        this.id = ID_USER_COUNTER.getAndIncrement();
-        this.role = role;
-        this.login = login;
-        this.password = password;
-        this.quests = new ArrayList<>();
-        this.games = new ArrayList<>();
+    public User() {
     }
 
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getLogin() {
@@ -66,8 +73,16 @@ public class User {
         return quests;
     }
 
+    public void setQuests(List<Quest> quests) {
+        this.quests = quests;
+    }
+
     public List<Game> getGames() {
         return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
     }
 
     @Override
@@ -77,7 +92,6 @@ public class User {
                 ", role=" + role +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", games='" + games + '\'' +
                 '}';
     }
 }

@@ -1,65 +1,96 @@
 package ru.javarush.quest.bogdanov.questdelta.entities;
 
-import java.time.LocalDate;
-import java.util.concurrent.atomic.AtomicLong;
+import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "game", schema = "data_storage")
 public class Game {
 
-    private static final AtomicLong ID_GAME_COUNTER = new AtomicLong(1);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "game_id")
+    private Long id;
 
-    public long id;
+    @ManyToOne
+    @JoinColumn(name = "player")
+    private User user;
 
-    public long userId;
+    @ManyToOne
+    @JoinColumn(name = "quest")
+    private Quest quest;
 
-    public long questId;
+    @ManyToOne
+    @JoinColumn(name = "current_question")
+    private Question currentQuestion;
 
-    public long currentQuestionId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "game_state", nullable = false)
+    private GameState gameState;
 
-    public GameState gameState;
+    @CreationTimestamp
+    @Column(name = "date")
+    private LocalDateTime createDate;
 
-    public LocalDate date;
-
-    public Game(long userId, long questId) {
-        this.id = ID_GAME_COUNTER.getAndIncrement();
-        this.userId = userId;
-        this.questId = questId;
-        this.date = LocalDate.now();
+    public Game() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getQuestId() {
-        return questId;
+    public User getUser() {
+        return user;
     }
 
-    public long getCurrentQuestionId() {
-        return currentQuestionId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Quest getQuest() {
+        return quest;
+    }
+
+    public void setQuest(Quest quest) {
+        this.quest = quest;
+    }
+
+    public Question getCurrentQuestion() {
+        return currentQuestion;
+    }
+
+    public void setCurrentQuestion(Question currentQuestion) {
+        this.currentQuestion = currentQuestion;
     }
 
     public GameState getGameState() {
         return gameState;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
     @Override
     public String toString() {
         return "Game{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", gameState=" + gameState +
-                ", date=" + date +
+                ", createDate=" + createDate +
                 '}';
     }
 }
