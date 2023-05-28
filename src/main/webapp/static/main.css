@@ -1,0 +1,58 @@
+.header {
+    text-align: center
+}
+
+.questText {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 10px;
+}
+
+.buttons {
+    margin: 3px;
+    padding: 5px;
+    min-width: 35px;
+    text-align: center;
+    border-radius: 4px;
+    color: #000000;
+}
+
+.quests, .users {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 10px;
+}
+
+.headerPanel {
+    color: #000000;
+    background: #ffffff; /* Цвет фона при наведении на ссылку курсора */
+    margin: 20px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.headerPanel:hover {
+    color: #ffffff;
+    background: #000000; /* Цвет фона при наведении на ссылку курсора */
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #ffffff;
+    border-collapse: collapse;
+}
+.table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+}
+.table td {
+    border: 1px solid #dddddd;
+    padding: 5px;
+}
+
+.info_message {
+    text-align: center;
+}
