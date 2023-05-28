@@ -64,7 +64,6 @@ public abstract class BaseRepository<T> implements Repository<T> {
     public void update(T entity) {
         Session session = sessionCreator.getSession();
         session.merge(entity);
-
     }
 
     @Override

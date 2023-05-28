@@ -1,5 +1,6 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
+import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.javarush.quest.bogdanov.questdelta.entities.Game;
 import ru.javarush.quest.bogdanov.questdelta.repositories.GameRepository;
@@ -19,7 +20,8 @@ public class GameService {
     }
 
     public void create(Game game) {
-        Transaction transaction = gameRepository.getSessionCreator().getSession().beginTransaction();
+        Session session = gameRepository.getSessionCreator().getSession();
+        Transaction transaction = session.beginTransaction();
         try {
             gameRepository.create(game);
             transaction.commit();
@@ -29,7 +31,8 @@ public class GameService {
     }
 
     public void update(Game game) {
-        Transaction transaction = gameRepository.getSessionCreator().getSession().beginTransaction();
+        Session session = gameRepository.getSessionCreator().getSession();
+        Transaction transaction = session.beginTransaction();
         try {
             gameRepository.update(game);
             transaction.commit();

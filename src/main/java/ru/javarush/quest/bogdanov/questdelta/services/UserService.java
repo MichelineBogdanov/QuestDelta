@@ -1,5 +1,6 @@
 package ru.javarush.quest.bogdanov.questdelta.services;
 
+import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.javarush.quest.bogdanov.questdelta.entities.Role;
 import ru.javarush.quest.bogdanov.questdelta.entities.User;
@@ -24,7 +25,8 @@ public class UserService {
     }
 
     public boolean create(String login, String password, Role role) {
-        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        Session session = userRepository.getSessionCreator().getSession();
+        Transaction transaction = session.beginTransaction();
         try {
             User user = new User();
             user.setLogin(login);
@@ -40,7 +42,8 @@ public class UserService {
     }
 
     public boolean update(Long id, String login, String password, Role role) {
-        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        Session session = userRepository.getSessionCreator().getSession();
+        Transaction transaction = session.beginTransaction();
         try {
             User user = new User();
             user.setId(id);
@@ -57,7 +60,8 @@ public class UserService {
     }
 
     public boolean delete(Long id) {
-        Transaction transaction = userRepository.getSessionCreator().getSession().beginTransaction();
+        Session session = userRepository.getSessionCreator().getSession();
+        Transaction transaction = session.beginTransaction();
         try {
             userRepository.delete(id);
             transaction.commit();

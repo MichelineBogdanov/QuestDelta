@@ -10,13 +10,18 @@ import ru.javarush.quest.bogdanov.questdelta.config.Configuration;
 import ru.javarush.quest.bogdanov.questdelta.entities.Role;
 import ru.javarush.quest.bogdanov.questdelta.entities.User;
 import ru.javarush.quest.bogdanov.questdelta.services.UserService;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 
-import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.*;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_ERROR;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_ROLES;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_USER;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_PROFILE;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_SIGNUP;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_USER;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_USERS;
 
-@WebServlet(name = "UserServlet", value = {Go.USER, Go.PROFILE, Go.SIGNUP})
+@WebServlet(name = "UserServlet", value = {GO_USER, GO_PROFILE, GO_SIGNUP})
 public class UserServlet extends HttpServlet {
 
     private final UserService userService = Configuration.USER_SERVICE;
@@ -26,7 +31,7 @@ public class UserServlet extends HttpServlet {
         initServletContext();
         User user = userService.getUser(getUserId(request));
         if (user != null) {
-            request.setAttribute(USER, user);
+            request.setAttribute(ATTRIBUTE_USER, user);
         }
         request.getRequestDispatcher("WEB-INF/user.jsp").forward(request, response);
     }
@@ -38,7 +43,7 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         Role select = Role.valueOf(request.getParameter("select"));
         if (postUser(request, userId, login, password, select)) {
-            response.sendRedirect("/users");
+            response.sendRedirect(GO_USERS);
         } else {
             request.getRequestDispatcher("WEB-INF/user.jsp").forward(request, response);
         }
@@ -50,17 +55,17 @@ public class UserServlet extends HttpServlet {
         userCheck = user != null;
         if (!userCheck && request.getParameter("create") != null) {
             if (!userService.create(login, password, select)) {
-                request.setAttribute(ERROR, "This login is present");
+                request.setAttribute(ATTRIBUTE_ERROR, "This login is present");
                 return false;
             }
         } else if (userCheck && request.getParameter("delete") != null) {
             if (!userService.delete(id)) {
-                request.setAttribute(ERROR, "This login is present");
+                request.setAttribute(ATTRIBUTE_ERROR, "This login is present");
                 return false;
             }
         } else if (userCheck && request.getParameter("update") != null) {
             if(!userService.update(id, login, password, select)) {
-                request.setAttribute(ERROR, "This user was not found");
+                request.setAttribute(ATTRIBUTE_ERROR, "This user was not found");
                 return false;
             }
         }
@@ -75,8 +80,8 @@ public class UserServlet extends HttpServlet {
 
     private void initServletContext() {
         ServletContext servletContext = getServletContext();
-        if (servletContext.getAttribute(ROLES) == null) {
-            servletContext.setAttribute(ROLES, Role.values());
+        if (servletContext.getAttribute(ATTRIBUTE_ROLES) == null) {
+            servletContext.setAttribute(ATTRIBUTE_ROLES, Role.values());
         }
     }
 }

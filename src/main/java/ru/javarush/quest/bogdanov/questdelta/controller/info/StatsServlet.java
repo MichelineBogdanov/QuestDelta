@@ -10,12 +10,13 @@ import ru.javarush.quest.bogdanov.questdelta.entities.Game;
 import ru.javarush.quest.bogdanov.questdelta.services.GameService;
 import ru.javarush.quest.bogdanov.questdelta.services.StatsService;
 import ru.javarush.quest.bogdanov.questdelta.utils.Attributes;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "StatsServlet", value = Go.STATS)
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_STATS;
+
+@WebServlet(name = "StatsServlet", value = GO_STATS)
 public class StatsServlet extends HttpServlet {
 
     private final GameService gameService = Configuration.GAME_SERVICE;
@@ -25,8 +26,8 @@ public class StatsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Game> all = gameService.getAll();
         String gamesStats = statsService.getGamesStats();
-        request.setAttribute(Attributes.ALL, all);
-        request.setAttribute(Attributes.GAMES_STATS, gamesStats);
+        request.setAttribute(Attributes.ATTRIBUTE_ALL, all);
+        request.setAttribute(Attributes.ATTRIBUTE_GAMES_STATS, gamesStats);
         request.getRequestDispatcher("WEB-INF/stats.jsp").forward(request, response);
     }
 }

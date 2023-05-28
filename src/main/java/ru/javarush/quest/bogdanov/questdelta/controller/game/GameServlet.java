@@ -14,13 +14,15 @@ import ru.javarush.quest.bogdanov.questdelta.services.AnswerService;
 import ru.javarush.quest.bogdanov.questdelta.services.GameService;
 import ru.javarush.quest.bogdanov.questdelta.services.QuestService;
 import ru.javarush.quest.bogdanov.questdelta.services.QuestionService;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 
-import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.*;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_GAME;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_QUESTION;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_USER;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_GAME;
 
-@WebServlet(name = "GameServlet", value = Go.GAME)
+@WebServlet(name = "GameServlet", value = GO_GAME)
 public class GameServlet extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(GameServlet.class);
@@ -32,7 +34,7 @@ public class GameServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        if (session.getAttribute(GAME) == null) {
+        if (session.getAttribute(ATTRIBUTE_GAME) == null) {
             init(request, session);
         }
         request.getRequestDispatcher("WEB-INF/game.jsp").forward(request, response);
@@ -44,7 +46,7 @@ public class GameServlet extends HttpServlet {
         long currentQuestionId = Long.parseLong(request.getParameter("currentquestionid"));
         long answerId = Long.parseLong(request.getParameter("answerid"));
         Question nextQuestionByAnswer = questionService.getNextQuestionByAnswer(currentQuestionId, answerId);
-        Game game = (Game) session.getAttribute(GAME);
+        Game game = (Game) session.getAttribute(ATTRIBUTE_GAME);
         if (nextQuestionByAnswer.getAnswerList().size() == 0) {
             if (answerService.getAnswer(answerId).getCorrect()) {
                 game.setGameState(GameState.WIN);
@@ -55,14 +57,14 @@ public class GameServlet extends HttpServlet {
             game.setCurrentQuestion(nextQuestionByAnswer);
         }
         gameService.update(game);
-        session.setAttribute(QUESTION, nextQuestionByAnswer);
+        session.setAttribute(ATTRIBUTE_QUESTION, nextQuestionByAnswer);
         request.getRequestDispatcher("WEB-INF/game.jsp").forward(request, response);
     }
 
     private void init(HttpServletRequest request, HttpSession session) {
         long questId = getQuestId(request);
         Quest quest = questService.getQuestById(questId);
-        User currentUser = (User) session.getAttribute(USER);
+        User currentUser = (User) session.getAttribute(ATTRIBUTE_USER);
         Question firstQuestion = questionService.firstQuestionId(questId);
         Game game = new Game();
         game.setCurrentQuestion(firstQuestion);
@@ -71,8 +73,8 @@ public class GameServlet extends HttpServlet {
         game.setQuest(quest);
         gameService.create(game);
         //log.info("game {} initialized, with {} quest, by user {}", game.getId(), questId, currentUserId);
-        session.setAttribute(GAME, game);
-        session.setAttribute(QUESTION, firstQuestion);
+        session.setAttribute(ATTRIBUTE_GAME, game);
+        session.setAttribute(ATTRIBUTE_QUESTION, firstQuestion);
     }
 
     private Long getQuestId(HttpServletRequest request) {

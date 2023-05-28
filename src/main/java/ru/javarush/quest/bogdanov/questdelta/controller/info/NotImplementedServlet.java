@@ -5,11 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 
-@WebServlet(name = "NotImplementedServlet", value = Go.NOT_IMPLEMENTED)
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_NOT_IMPLEMENTED;
+
+@WebServlet(name = "NotImplementedServlet", value = GO_NOT_IMPLEMENTED)
 public class NotImplementedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

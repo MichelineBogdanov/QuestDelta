@@ -9,12 +9,13 @@ import ru.javarush.quest.bogdanov.questdelta.config.Configuration;
 import ru.javarush.quest.bogdanov.questdelta.entities.Quest;
 import ru.javarush.quest.bogdanov.questdelta.services.QuestService;
 import ru.javarush.quest.bogdanov.questdelta.utils.Attributes;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "QuestsServlet", value = Go.QUESTS)
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_QUESTS;
+
+@WebServlet(name = "QuestsServlet", value = GO_QUESTS)
 public class QuestsServlet extends HttpServlet {
 
     private final QuestService questService = Configuration.QUEST_SERVICE;
@@ -22,7 +23,7 @@ public class QuestsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Quest> all = questService.getAll();
-        request.setAttribute(Attributes.ALL, all);
+        request.setAttribute(Attributes.ATTRIBUTE_ALL, all);
         request.getRequestDispatcher("WEB-INF/quests.jsp").forward(request, response);
     }
 }

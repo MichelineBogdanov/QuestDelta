@@ -9,14 +9,14 @@ import ru.javarush.quest.bogdanov.questdelta.config.Configuration;
 import ru.javarush.quest.bogdanov.questdelta.entities.User;
 import ru.javarush.quest.bogdanov.questdelta.services.StatsService;
 import ru.javarush.quest.bogdanov.questdelta.services.UserService;
-import ru.javarush.quest.bogdanov.questdelta.utils.Go;
 
 import java.io.IOException;
 import java.util.List;
 
-import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ALL;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Attributes.ATTRIBUTE_ALL;
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.GO_USERS;
 
-@WebServlet(name = "UsersServlet", value = Go.USERS)
+@WebServlet(name = "UsersServlet", value = GO_USERS)
 public class UsersServlet extends HttpServlet {
 
     private final UserService userService = Configuration.USER_SERVICE;
@@ -25,7 +25,7 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<User> all = userService.getAll();
-        request.setAttribute(ALL, all);
+        request.setAttribute(ATTRIBUTE_ALL, all);
         request.getRequestDispatcher("WEB-INF/users.jsp").forward(request, response);
     }
 }

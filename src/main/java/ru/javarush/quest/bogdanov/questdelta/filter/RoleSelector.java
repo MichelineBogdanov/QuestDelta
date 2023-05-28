@@ -14,13 +14,15 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@WebFilter({"/", "/users", "/login", "/signup","/notimplemented", "/logout", "/profile", "/quests", "/stats", "/sugnupinfo", "/game", "/user", "/finish"})
+import static ru.javarush.quest.bogdanov.questdelta.utils.Go.*;
+
+@WebFilter({GO_ROOT, GO_USERS, GO_LOGIN, GO_SIGNUP, GO_NOT_IMPLEMENTED, GO_LOGOUT, GO_PROFILE, GO_QUESTS, GO_STATS, GO_SIGNUP_INFO, GO_GAME, GO_USER, GO_FINISH})
 public class RoleSelector implements Filter {
 
     private final Map<Role, List<String>> uriMap = Map.of(
-            Role.GUEST, List.of("/", "/users", "/login", "/signup", "/notimplemented", "/logout", "/profile", "/quests", "/stats", "/sugnupinfo"),
-            Role.USER, List.of("/", "/users", "/login", "/signup", "/notimplemented", "/logout", "/profile", "/quests", "/stats", "/game", "/finish"),
-            Role.ADMIN, List.of("/", "/users", "/login", "/signup", "/notimplemented","/logout",  "/profile", "/quests", "/stats", "/game", "/user", "/finish")
+            Role.GUEST, List.of(GO_ROOT, GO_USERS, GO_LOGIN, GO_SIGNUP, GO_NOT_IMPLEMENTED, GO_LOGOUT, GO_PROFILE, GO_QUESTS, GO_STATS, GO_SIGNUP_INFO),
+            Role.USER, List.of(GO_ROOT, GO_USERS, GO_LOGIN, GO_SIGNUP, GO_NOT_IMPLEMENTED, GO_LOGOUT, GO_PROFILE, GO_QUESTS, GO_STATS, GO_GAME, GO_FINISH),
+            Role.ADMIN, List.of(GO_ROOT, GO_USERS, GO_LOGIN, GO_SIGNUP, GO_NOT_IMPLEMENTED, GO_LOGOUT, GO_PROFILE, GO_QUESTS, GO_STATS, GO_GAME, GO_USER, GO_FINISH)
     );
 
     @Override
@@ -40,7 +42,7 @@ public class RoleSelector implements Filter {
         if (uriMap.get(role).contains(command)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            response.sendRedirect("/signupinfo");
+            response.sendRedirect(GO_SIGNUP_INFO);
         }
     }
 

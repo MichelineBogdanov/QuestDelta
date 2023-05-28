@@ -29,7 +29,6 @@
                     <input id="userPassword" name="password" type="password" placeholder="placeholder"
                            class="form-control input-md"
                            value="${requestScope.user.password}">
-
                 </div>
             </div>
             <br>
